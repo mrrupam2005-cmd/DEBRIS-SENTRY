@@ -37,19 +37,24 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Enable CORS for React frontend running at http://localhost:5173, 5174, etc.
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "")
+custom_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+
+production_origins = [
+    "https://debris-sentry.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
+    "*"
+] + custom_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:8000",
-        "*"
-    ],
+    allow_origins=production_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // Centralized API Base URL configuration using Vite environment variables
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+export const API_BASE_URL = rawApiUrl.replace(/\/+$/, '');
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -10,6 +11,15 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+/**
+ * Helper to construct absolute image/media URLs for static backend assets
+ */
+export const getImageUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${API_BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
 
 // Centralized API Methods for DEBRIS-SENTRY Backend Integration
 

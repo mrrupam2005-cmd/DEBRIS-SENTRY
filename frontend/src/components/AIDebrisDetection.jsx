@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, Cpu, CheckCircle, Image as ImageIcon, Sparkles, Eye, EyeOff, Download, AlertCircle, ArrowRight, Shield } from 'lucide-react';
 import Badge from './Badge';
-import { API_BASE_URL } from '../api/client';
+import { API_BASE_URL, getImageUrl } from '../api/client';
 
 export default function AIDebrisDetection({ onUploadImage }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -227,7 +227,7 @@ export default function AIDebrisDetection({ onUploadImage }) {
           <div className="bg-space-dark rounded-xl overflow-hidden border border-space-border min-h-[300px] flex items-center justify-center relative">
             {previewUrl ? (
               <img
-                src={showBoxes && detectionResult ? `${API_BASE_URL}${detectionResult.processed_image_url}` : previewUrl}
+                src={showBoxes && detectionResult ? getImageUrl(detectionResult.processed_image_url) : previewUrl}
                 alt="Analysis Result"
                 className="max-h-[380px] w-full object-contain"
               />
@@ -242,7 +242,7 @@ export default function AIDebrisDetection({ onUploadImage }) {
           {detectionResult && (
             <div className="flex items-center justify-between pt-1">
               <a
-                href={`${API_BASE_URL}${detectionResult.processed_image_url}`}
+                href={getImageUrl(detectionResult.processed_image_url)}
                 download
                 target="_blank"
                 rel="noreferrer"

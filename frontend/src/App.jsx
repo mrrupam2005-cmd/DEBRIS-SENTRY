@@ -11,7 +11,7 @@ import Analytics from './components/Analytics';
 import {
   fetchSatellites, propagateAll, fetchConjunctions, fetchAnalyticsSummary,
   fetchPublicAlerts, fetchTrajectory, screenConjunctionPair, reviewConjunction,
-  syncLiveCelesTrak, detectAIDebris, fetchHealth
+  syncLiveCelesTrak, detectAIDebris, fetchHealth, API_BASE_URL
 } from './api/client';
 
 export default function App() {
@@ -34,7 +34,7 @@ export default function App() {
       const health = await fetchHealth();
       if (health.status === 'offline') {
         setIsBackendOnline(false);
-        setApiError('Backend server at http://127.0.0.1:8000 is unreachable. Using local cache mode.');
+        setApiError(`Backend API (${API_BASE_URL}) is unreachable. Using demo/cached fallback mode.`);
       } else {
         setIsBackendOnline(true);
         setApiError(null);

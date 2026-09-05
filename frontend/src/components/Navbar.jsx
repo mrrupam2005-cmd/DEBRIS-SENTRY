@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Globe, Satellite, AlertTriangle, Cpu, BarChart2, RefreshCw, Radio, Bell, CheckCircle2, ShieldAlert, Server, Sun } from 'lucide-react';
 import Badge from './Badge';
+import { API_BASE_URL } from '../api/client';
 
 export default function Navbar({ activeTab, setActiveTab, onSyncLive, isSyncing, sourceMode, alerts = [], onReviewAlert, isBackendOnline = true }) {
   const [showAlertsDropdown, setShowAlertsDropdown] = useState(false);
@@ -65,7 +66,7 @@ export default function Navbar({ activeTab, setActiveTab, onSyncLive, isSyncing,
             <div className={`px-2.5 py-0.5 rounded font-mono text-[10px] font-bold border ${
               isBackendOnline ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/40' : 'bg-amber-950/80 text-amber-400 border-amber-500/40'
             }`}>
-              {isBackendOnline ? 'BACKEND: ONLINE (127.0.0.1:8000)' : 'BACKEND: OFFLINE (DEMO MODE)'}
+              {isBackendOnline ? `BACKEND: ONLINE (${API_BASE_URL.replace(/^https?:\/\//, '')})` : 'BACKEND: OFFLINE (DEMO MODE)'}
             </div>
             <Badge type={sourceMode} size="normal" />
 
