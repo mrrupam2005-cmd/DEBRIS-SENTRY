@@ -60,10 +60,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Static directory setup for AI detection uploads
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
+import tempfile
+
+# Static directory setup for AI detection uploads (Vercel serverless compatible)
+UPLOAD_DIR = os.getenv("UPLOAD_DIR")
+if not UPLOAD_DIR:
+    backend_parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if os.getenv("VERCEL") or not os.access(backend_parent, os.W_OK):
+        UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "uploads")
+    else:
+        UPLOAD_DIR = os.path.join(backend_parent, "uploads")
+
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
 
 @app.on_event("startup")
 def startup_event():

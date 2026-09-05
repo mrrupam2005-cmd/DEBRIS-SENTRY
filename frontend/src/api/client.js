@@ -1,8 +1,13 @@
 import axios from 'axios';
 
 // Centralized API Base URL configuration using Vite environment variables
-const rawApiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-export const API_BASE_URL = rawApiUrl.replace(/\/+$/, '');
+// For same-origin Vercel deployments, VITE_API_URL can be empty (defaults to relative paths)
+const defaultDevUrl = 'http://127.0.0.1:8000';
+const rawApiUrl = import.meta.env.VITE_API_URL !== undefined 
+  ? import.meta.env.VITE_API_URL 
+  : (import.meta.env.DEV ? defaultDevUrl : '');
+
+export const API_BASE_URL = rawApiUrl ? rawApiUrl.replace(/\/+$/, '') : '';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -18,8 +23,10 @@ const apiClient = axios.create({
 export const getImageUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (!API_BASE_URL) return path.startsWith('/') ? path : `/${path}`;
   return `${API_BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
 };
+
 
 // Centralized API Methods for DEBRIS-SENTRY Backend Integration
 
